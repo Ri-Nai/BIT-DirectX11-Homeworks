@@ -1,2 +1,19 @@
 *.xlsx
-*/.vs/
+*.vs/
+# 排除 x64 文件夹
+x64/
+
+# 排除 Debug 和 Release 生成的文件夹
+Debug/
+Release/
+
+# 排除 Visual Studio 缓存和中间文件
+*.exe
+*.pdb
+*.ipch
+*.ilk
+*.idb
+*.log
+*.tlog
+*.lastbuildstate
+*.vcxproj.user
