@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\Study\Files\2024-2025-1\DirectX11\Homeworks\编程作业1-你的名字-1120231313\编程作业1-你的名字-1120231313\x64\Debug\编程作业1-你的名字-1120231313.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\Study\Files\2024-2025-1\DirectX11\Homeworks\编程作业1-你的名字-1120231313\编程作业1-你的名字-1120231313\x64\Debug\Cube_PS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Study\Files\2024-2025-1\DirectX11\Homeworks\编程作业1-你的名字-1120231313\编程作业1-你的名字-1120231313\x64\Debug\Cube_VS.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
