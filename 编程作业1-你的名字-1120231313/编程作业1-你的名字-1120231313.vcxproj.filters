@@ -68,7 +68,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="ye.obj">
+    <Object Include="yjt.obj">
       <Filter>资源文件</Filter>
     </Object>
   </ItemGroup>

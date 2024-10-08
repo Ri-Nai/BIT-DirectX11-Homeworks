@@ -42,7 +42,7 @@ void GameApp::UpdateScene(float dt)
 	static float phi = 0.0f, theta = 0.0f;
 	phi += 0.0001f;
 	theta += 0.00015f;
-	m_CBuffer.world = XMMatrixTranspose(XMMatrixRotationX(phi) * XMMatrixRotationY(theta));
+	m_CBuffer.world = XMMatrixTranspose(XMMatrixRotationX(phi) * XMMatrixRotationZ(theta));
 	// 更新常量缓冲区，让立方体转起来
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	HR(m_pd3dImmediateContext->Map(m_pConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
@@ -60,7 +60,7 @@ void GameApp::DrawScene()
 	m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// 绘制立方体
-	m_pd3dImmediateContext->DrawIndexed(708, 0, 0);
+	m_pd3dImmediateContext->DrawIndexed(1716, 0, 0);
 	HR(m_pSwapChain->Present(0, 0));
 }
 
@@ -82,6 +82,12 @@ bool GameApp::InitEffect()
 
 	return true;
 }
+
+/**
+* 
+* 增加了读入obj模型的函数
+* 
+*/
 #include <random>
 #include <vector>
 #include <string>
@@ -93,7 +99,7 @@ bool GameApp::InitResource()
 {
 	auto readObj = [](VertexPosColor*& vertices, WORD*& indices)
 		{
-			std::ifstream file("ye.obj");
+			std::ifstream file("yjt.obj");
 			std::random_device rd;  // 用于获取随机种子
 			std::mt19937 gen(rd()); // 生成随机数引擎
 			std::uniform_real_distribution<float> dis(0.0f, 1.0f); // [0, 1) 的均匀分布
@@ -104,7 +110,7 @@ bool GameApp::InitResource()
 			while (std::getline(file, line))
 			{
 				if (!line.empty())
-					if (line[0] == 'v')
+					if (line.size() > 1 && line[0] == 'v' && line[1] != 'n')
 						s_vertices.push_back(line.substr(2));
 					else if (line[0] == 'f')
 						s_indices.push_back(line.substr(2));
@@ -117,14 +123,14 @@ bool GameApp::InitResource()
 				std::istringstream data(s_vertices[i]);
 				double x, y, z;
 				data >> x >> y >> z;
+				// 线性变换坐标
 				x *= 20, y *= 20, z *= 20;
-				x -= 6;
-				//y -= 3;
+				x += 5;
+				y -= 1;
 				z -= 5;
 				vertices[i].pos = XMFLOAT3(x, y, z);
+				// 随机颜色
 				vertices[i].color = XMFLOAT4(dis(gen), dis(gen), dis(gen), dis(gen));
-				//vertices[i].color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-
 			}
 			for (int i = 0; i < s_indices.size(); ++i)
 			{
@@ -142,27 +148,20 @@ bool GameApp::InitResource()
 			}
 
 		};
-	// ******************
-	// 设置立方体顶点
-	//    5________ 6
-	//    /|      /|
-	//   /_|_____/ |
-	//  1|4|_ _ 2|_|7
-	//   | /     | /
-	//   |/______|/
-	//  0       3
-
 	VertexPosColor* vertices = NULL;
-	// ******************
-	// 索引数组
-	//
 	WORD* indices = NULL;
+	/**
+	* 
+	* 读入索引数组和顶点数组
+	* 
+	*/
 	readObj(vertices, indices);
 
 	// 设置顶点缓冲区描述
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(vbd));
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
+	// 由于是new的动态数组，将 sizeof 改成 _msize
 	vbd.ByteWidth = _msize(vertices);
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
@@ -177,6 +176,9 @@ bool GameApp::InitResource()
 	D3D11_BUFFER_DESC ibd;
 	ZeroMemory(&ibd, sizeof(ibd));
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
+	/**
+	* 由于是new的动态数组，将 sizeof 改成 _msize
+	*/
 	ibd.ByteWidth = _msize(indices);
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
