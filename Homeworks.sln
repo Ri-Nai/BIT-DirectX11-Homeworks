@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "编程作业1-你的名字-1120231313", "编程作业1-你的名字-1120231313\编程作业1-你的名字-1120231313.vcxproj", "{79F80499-2AA2-4C2E-A4AA-236387733A10}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "编程作业2-字符森林-1120231313", "编程作业2-字符森林-1120231313\编程作业2-字符森林-1120231313.vcxproj", "{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{79F80499-2AA2-4C2E-A4AA-236387733A10}.Release|x64.Build.0 = Release|x64
 		{79F80499-2AA2-4C2E-A4AA-236387733A10}.Release|x86.ActiveCfg = Release|Win32
 		{79F80499-2AA2-4C2E-A4AA-236387733A10}.Release|x86.Build.0 = Release|Win32
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Debug|x64.ActiveCfg = Debug|x64
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Debug|x64.Build.0 = Debug|x64
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Debug|x86.ActiveCfg = Debug|Win32
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Debug|x86.Build.0 = Debug|Win32
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Release|x64.ActiveCfg = Release|x64
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Release|x64.Build.0 = Release|x64
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Release|x86.ActiveCfg = Release|Win32
+		{031C9FB8-DD73-4D6F-9AAD-ED9FC6D18951}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
