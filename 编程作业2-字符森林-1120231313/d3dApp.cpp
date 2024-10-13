@@ -21,7 +21,7 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 D3DApp::D3DApp(HINSTANCE hInstance)
 	: m_hAppInst(hInstance),
-	m_MainWndCaption(L"Rendering a Cube"),
+	m_MainWndCaption(L"字符森林"),
 	m_ClientWidth(800),
 	m_ClientHeight(600),
 	m_hMainWnd(nullptr),
