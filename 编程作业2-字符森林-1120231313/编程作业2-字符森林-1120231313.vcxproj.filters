@@ -56,6 +56,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\Cube_PS.hlsl">
@@ -69,5 +72,10 @@
     <None Include="HLSL\Cube.hlsli">
       <Filter>着色器</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Ning.obj">
+      <Filter>资源文件</Filter>
+    </Object>
   </ItemGroup>
 </Project>

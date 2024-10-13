@@ -1,24 +1,29 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "GameApp.h"
 #include "d3dUtil.h"
-
+#include "DXTrace.h"
+#include <wrl/client.h>
+using namespace DirectX;
 
 class Model {
-public:
-    GameApp::VertexPosColor* vertices = nullptr;
-    WORD* indices = nullptr;
 
-    Model(const std::string& filePath);
-    ~Model();
-    size_t getVertexCount() const;
-    size_t getIndexCount() const;
+	// 使用模板别名(C++11)简化类型名
+	template <class T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+public:
+	Model(ComPtr<ID3D11Buffer> vertexBuffer, ComPtr<ID3D11Buffer> indexBuffer, UINT indexCount);
+	~Model();
+
+	void Draw(ComPtr<ID3D11DeviceContext> pContext, ConstantBuffer pCBuffer, ComPtr<ID3D11Buffer> pConstantBuffer) const;
+	static Model* LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath);
 
 private:
-    void readObj(const std::string& filePath);
-    size_t vertexCount = 0;
-    size_t indexCount = 0;
+	ComPtr<ID3D11Buffer> m_pVertexBuffer; // 顶点缓冲区
+	ComPtr<ID3D11Buffer> m_pIndexBuffer;  // 索引缓冲区
+	UINT m_IndexCount;              // 索引数量
 };
+
 
 #endif // MODEL_H

@@ -28,6 +28,7 @@ bool GameApp::Init()
 	if (!InitResource())
 		return false;
 
+
 	return true;
 }
 

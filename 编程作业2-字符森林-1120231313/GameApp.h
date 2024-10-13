@@ -3,23 +3,9 @@
 
 #include "d3dApp.h"
 #include "Model.h"
+
 class GameApp : public D3DApp
 {
-public:
-	struct VertexPosColor
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT4 color;
-		static const D3D11_INPUT_ELEMENT_DESC inputLayout[2];
-	};
-
-	struct ConstantBuffer
-	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX proj;
-	};
-
 public:
 	GameApp(HINSTANCE hInstance);
 	~GameApp();
@@ -37,6 +23,10 @@ private:
 
 
 private:
+	static constexpr int size = 16;
+	float angle = 0;
+	std::vector<Model*> models;
+	std::vector<std::vector<XMMATRIX>> worlds;
 	ComPtr<ID3D11InputLayout> m_pVertexLayout;	    // 顶点输入布局
 	ComPtr<ID3D11Buffer> m_pVertexBuffer;			// 顶点缓冲区
 	ComPtr<ID3D11Buffer> m_pIndexBuffer;			// 索引缓冲区
