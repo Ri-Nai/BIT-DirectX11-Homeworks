@@ -10,11 +10,14 @@ Model::~Model() {
 
 void Model::Draw(ComPtr<ID3D11DeviceContext> context, ConstantBuffer pCBuffer, ComPtr<ID3D11Buffer> pConstantBuffer) const {
 
-	// 更新常量缓冲区数据
+	// 更新常量缓冲区数据, 将Constant Buffer的内容复制到mappedData中
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	context->Map(pConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
 	memcpy_s(mappedData.pData, sizeof(ConstantBuffer), &pCBuffer, sizeof(ConstantBuffer));
+
+	// 释放常量缓冲区
 	context->Unmap(pConstantBuffer.Get(), 0);
+
 	UINT stride = sizeof(VertexPosColor);
 	UINT offset = 0;
 	// 绘制模型
@@ -22,6 +25,7 @@ void Model::Draw(ComPtr<ID3D11DeviceContext> context, ConstantBuffer pCBuffer, C
 	context->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 	context->DrawIndexed(m_IndexCount, 0, 0); // 根据模型的索引计数绘制
 }
+
 Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath) {
 	std::ifstream file(filePath);
 	if (!file.is_open()) {
