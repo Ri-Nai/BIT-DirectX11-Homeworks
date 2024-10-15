@@ -10,17 +10,17 @@ Model::~Model() {
 
 void Model::Draw(ComPtr<ID3D11DeviceContext> context, ConstantBuffer pCBuffer, ComPtr<ID3D11Buffer> pConstantBuffer) const {
 
-	// ¸üĞÂ³£Á¿»º³åÇøÊı¾İ
+	// æ›´æ–°å¸¸é‡ç¼“å†²åŒºæ•°æ®
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	context->Map(pConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
 	memcpy_s(mappedData.pData, sizeof(ConstantBuffer), &pCBuffer, sizeof(ConstantBuffer));
 	context->Unmap(pConstantBuffer.Get(), 0);
 	UINT stride = sizeof(VertexPosColor);
 	UINT offset = 0;
-	// »æÖÆÄ£ĞÍ
+	// ç»˜åˆ¶æ¨¡å‹
 	context->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
 	context->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-	context->DrawIndexed(m_IndexCount, 0, 0); // ¸ù¾İÄ£ĞÍµÄË÷Òı¼ÆÊı»æÖÆ
+	context->DrawIndexed(m_IndexCount, 0, 0); // æ ¹æ®æ¨¡å‹çš„ç´¢å¼•è®¡æ•°ç»˜åˆ¶
 }
 Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath) {
 	std::ifstream file(filePath);
@@ -35,7 +35,7 @@ Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePat
 	std::string line;
 	std::vector<std::string> s_vertices, s_indices;
 
-	// ´æ´¢Ã¿ĞĞµÄÄÚÈİ
+	// å­˜å‚¨æ¯è¡Œçš„å†…å®¹
 	while (std::getline(file, line)) {
 		if (!line.empty()) {
 			if (line.size() > 1 && line[0] == 'v' && line[1] != 'n')
@@ -55,33 +55,33 @@ Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePat
 	float centerY = 0.0f;
 	float centerZ = 0.0f;
 
-	std::vector<XMFLOAT3> tempVertices(vertexCount); // ÁÙÊ±´æ´¢¶¥µã
+	std::vector<XMFLOAT3> tempVertices(vertexCount); // ä¸´æ—¶å­˜å‚¨é¡¶ç‚¹
 
-	// ¶ÁÈ¡¶¥µã²¢¼ÆËãÖÊĞÄ
+	// è¯»å–é¡¶ç‚¹å¹¶è®¡ç®—è´¨å¿ƒ
 	for (size_t i = 0; i < s_vertices.size(); ++i) {
 		std::istringstream data(s_vertices[i]);
 		float x, y, z;
 		data >> x >> y >> z;
-		x *= 20; // ÏßĞÔ±ä»»×ø±ê
+		x *= 20; // çº¿æ€§å˜æ¢åæ ‡
 		y *= 20;
 		z *= 20;
 
-		tempVertices[i] = XMFLOAT3(x, y, z); // ´æ´¢Ô­Ê¼¶¥µã
+		tempVertices[i] = XMFLOAT3(x, y, z); // å­˜å‚¨åŸå§‹é¡¶ç‚¹
 
 		centerX += x;
 		centerY += y;
 		centerZ += z;
 	}
 
-	// ¼ÆËãÖÊĞÄ
+	// è®¡ç®—è´¨å¿ƒ
 	centerX /= vertexCount;
 	centerY /= vertexCount;
 	centerZ /= vertexCount;
 
-	// ÖØĞÂ¸³Öµ¶¥µã²¢ÒÆ¶¯µ½ÖĞĞÄ
+	// é‡æ–°èµ‹å€¼é¡¶ç‚¹å¹¶ç§»åŠ¨åˆ°ä¸­å¿ƒ
 	for (size_t i = 0; i < vertexCount; ++i) {
 		vertices[i].pos = XMFLOAT3(tempVertices[i].x - centerX, tempVertices[i].y - centerY, tempVertices[i].z - centerZ);
-		vertices[i].color = XMFLOAT4(dis(gen), dis(gen), dis(gen), dis(gen)); // Ëæ»úÑÕÉ«
+		vertices[i].color = XMFLOAT4(dis(gen), dis(gen), dis(gen), dis(gen)); // éšæœºé¢œè‰²
 	}
 	for (size_t i = 0; i < s_indices.size(); ++i) {
 		std::istringstream data(s_indices[i]);
@@ -97,7 +97,7 @@ Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePat
 		indices[3 * i + 2] = a - 1;
 	}
 
-	// ´´½¨¶¥µã»º³åÇø
+	// åˆ›å»ºé¡¶ç‚¹ç¼“å†²åŒº
 	ComPtr<ID3D11Buffer> vertexBuffer = nullptr;
 	D3D11_BUFFER_DESC vbd = {};
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -108,9 +108,9 @@ Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePat
 	D3D11_SUBRESOURCE_DATA InitData = {};
 	InitData.pSysMem = vertices;
 	HR(pDevice->CreateBuffer(&vbd, &InitData, vertexBuffer.GetAddressOf()));
-	delete[] vertices; // ÊÍ·ÅÁÙÊ±¶¥µãÊı¾İ
+	delete[] vertices; // é‡Šæ”¾ä¸´æ—¶é¡¶ç‚¹æ•°æ®
 
-	// ´´½¨Ë÷Òı»º³åÇø
+	// åˆ›å»ºç´¢å¼•ç¼“å†²åŒº
 	ComPtr<ID3D11Buffer> indexBuffer = nullptr;
 	D3D11_BUFFER_DESC ibd = {};
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -120,7 +120,7 @@ Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePat
 
 	InitData.pSysMem = indices;
 	HR(pDevice->CreateBuffer(&ibd, &InitData, indexBuffer.GetAddressOf()));
-	delete[] indices; // ÊÍ·ÅÁÙÊ±Ë÷ÒıÊı¾İ
+	delete[] indices; // é‡Šæ”¾ä¸´æ—¶ç´¢å¼•æ•°æ®
 
 	return new Model(vertexBuffer, indexBuffer, indexCount);
 }
