@@ -39,6 +39,7 @@ void GameApp::OnResize()
 void GameApp::UpdateScene(float dt)
 {
 	worlds.clear();
+	// worlds[0] 和 [1] 存储 母字符 与 子字符 的世界矩阵 
 	worlds.resize(2);
 	angle += dt;
 	
@@ -47,15 +48,18 @@ void GameApp::UpdateScene(float dt)
 		for (int j = -size; j <= size; j++)
 		{
 			float length = abs(i) + abs(j);
-			float scale = (sinf(0.2 * angle * 3.0f + length) + 1.3f) * 1.3;
+			float scale = (sinf(0.2 * angle * 3.0f + i + j) + 0.5) * 1.3;
 			auto mScale = XMMatrixScaling(scale, scale, scale);
 			auto mRotateSelf = XMMatrixRotationX(angle + i + j);
-			auto mRotateCommon = XMMatrixRotationZ(angle * length * 0.02);
+			auto mRotateCommon = XMMatrixRotationZ(angle * length * 0.015);
 			auto mTranslateXY = XMMatrixTranslation(i * 10, j * 10, 0);
-			auto mTranslateZ = XMMatrixTranslation(0, 0, pow((12 - length), 2) * cos(angle * 0.6));
+			auto mTranslateZ = XMMatrixTranslation(0, 0, pow((11.5 - length), 2) * cos(angle * 0.6));
 			auto mTranslate = mTranslateXY * mRotateCommon * mTranslateZ;
+			// 计算出变换然后存储到世界矩阵的数组中
 			worlds[0].push_back(XMMatrixTranspose(mScale * mRotateSelf * mTranslate));
-			srand(length);
+			// 每个子字符是从同一个起点开始的，所以设置种子每次一致
+			// 疑似可以通过初始化一个起始位置，但是这样的话代码结构又要大改
+			srand(length + i * j);
 			
 			
 			scale *= 0.6;
@@ -64,6 +68,7 @@ void GameApp::UpdateScene(float dt)
 			{
 				auto mScaleChild = XMMatrixScaling(scale, scale, scale);
 				auto mRotateChild = XMMatrixRotationX(rand()) * XMMatrixRotationY(rand()) * XMMatrixRotationZ(rand() + angle);
+				// 计算出变换然后存储到世界矩阵的数组中
 				worlds[1].push_back(XMMatrixTranspose(mTranslateChild * mRotateSelf * mScaleChild * mRotateChild * mTranslate));
 			}
 			
@@ -75,7 +80,7 @@ void GameApp::DrawScene()
 {
 	assert(m_pd3dImmediateContext);
 	assert(m_pSwapChain);
-	static float black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };	// RGBA = (0,0,0,255)
+	static float black[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), reinterpret_cast<const float*>(&black));
 	m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -83,10 +88,10 @@ void GameApp::DrawScene()
 		for (const auto &world : worlds[i])
 		{
 			m_CBuffer.world = world;
+			// 其实可以直接传world矩阵进去但是又要调用这个常量缓冲区所以就写成这样了
+			// 调用我写的Model类的绘制函数
 			models[i]->Draw(m_pd3dImmediateContext, m_CBuffer, m_pConstantBuffer);
 		}
-	//models[0]->Draw(m_pd3dImmediateContext, m_CBuffer, m_pConstantBuffer);
-	//models[1]->Draw(m_pd3dImmediateContext, m_CBuffer, m_pConstantBuffer);
 
 	HR(m_pSwapChain->Present(0, 0));
 }
