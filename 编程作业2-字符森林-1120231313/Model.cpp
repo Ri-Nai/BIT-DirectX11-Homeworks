@@ -22,7 +22,7 @@ void Model::Draw(ComPtr<ID3D11DeviceContext> context, ConstantBuffer pCBuffer, C
 	context->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 	context->DrawIndexed(m_IndexCount, 0, 0); // 根据模型的索引计数绘制
 }
-Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath) {
+std::unique_ptr<Model> Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath) {
 	std::ifstream file(filePath);
 	if (!file.is_open()) {
 		throw std::runtime_error("Failed to open OBJ file.");
@@ -122,5 +122,5 @@ Model* Model::LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePat
 	HR(pDevice->CreateBuffer(&ibd, &InitData, indexBuffer.GetAddressOf()));
 	delete[] indices; // 释放临时索引数据
 
-	return new Model(vertexBuffer, indexBuffer, indexCount);
+	return std::make_unique<Model>(vertexBuffer, indexBuffer, indexCount);
 }

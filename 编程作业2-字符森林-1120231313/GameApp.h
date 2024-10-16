@@ -28,7 +28,7 @@ private:
 	// 定义了游戏至此的角度
 	float angle = 0;
 	// 定义了模型和对应的世界矩阵组
-	std::vector<Model*> models;
+	std::vector<std::unique_ptr<Model>> models;
 	std::vector<std::vector<XMMATRIX>> worlds;
 
 	ComPtr<ID3D11InputLayout> m_pVertexLayout;	    // 顶点输入布局

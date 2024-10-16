@@ -17,7 +17,7 @@ public:
 	~Model();
 
 	void Draw(ComPtr<ID3D11DeviceContext> pContext, ConstantBuffer pCBuffer, ComPtr<ID3D11Buffer> pConstantBuffer) const;
-	static Model* LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath);
+	static std::unique_ptr<Model> LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath);
 
 private:
 	ComPtr<ID3D11Buffer> m_pVertexBuffer; // 顶点缓冲区
