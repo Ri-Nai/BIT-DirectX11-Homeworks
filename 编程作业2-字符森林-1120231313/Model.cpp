@@ -15,7 +15,7 @@ void Model::Draw(ComPtr<ID3D11DeviceContext> context, ConstantBuffer pCBuffer, C
 	context->Map(pConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData);
 	memcpy_s(mappedData.pData, sizeof(ConstantBuffer), &pCBuffer, sizeof(ConstantBuffer));
 
-	// �ͷų���������
+	// 释放常量缓冲区
 	context->Unmap(pConstantBuffer.Get(), 0);
 
 	UINT stride = sizeof(VertexPosColor);
