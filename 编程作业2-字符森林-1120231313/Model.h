@@ -8,7 +8,7 @@ using namespace DirectX;
 
 class Model {
 
-	// Ê¹ÓÃÄ£°å±ğÃû(C++11)¼ò»¯ÀàĞÍÃû
+	// ä½¿ç”¨æ¨¡æ¿åˆ«å(C++11)ç®€åŒ–ç±»å‹å
 	template <class T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -17,12 +17,12 @@ public:
 	~Model();
 
 	void Draw(ComPtr<ID3D11DeviceContext> pContext, ConstantBuffer pCBuffer, ComPtr<ID3D11Buffer> pConstantBuffer) const;
-	static Model* LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath);
+	static std::unique_ptr<Model> LoadModel(ComPtr<ID3D11Device> pDevice, const std::string& filePath);
 
 private:
-	ComPtr<ID3D11Buffer> m_pVertexBuffer; // ¶¥µã»º³åÇø
-	ComPtr<ID3D11Buffer> m_pIndexBuffer;  // Ë÷Òı»º³åÇø
-	UINT m_IndexCount;              // Ë÷ÒıÊıÁ¿
+	ComPtr<ID3D11Buffer> m_pVertexBuffer; // é¡¶ç‚¹ç¼“å†²åŒº
+	ComPtr<ID3D11Buffer> m_pIndexBuffer;  // ç´¢å¼•ç¼“å†²åŒº
+	UINT m_IndexCount;              // ç´¢å¼•æ•°é‡
 };
 
 

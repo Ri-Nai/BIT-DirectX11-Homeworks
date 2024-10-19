@@ -77,5 +77,8 @@
     <Object Include="Ning.obj">
       <Filter>资源文件</Filter>
     </Object>
+    <Object Include="Jie.obj">
+      <Filter>资源文件</Filter>
+    </Object>
   </ItemGroup>
 </Project>
