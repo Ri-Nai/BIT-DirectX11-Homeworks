@@ -262,24 +262,25 @@ bool GameApp::InitResource()
 
 	// 初始化不会变化的值
 	// 环境光
-	m_CBRarely.dirLight[0].ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_CBRarely.dirLight[0].ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_CBRarely.dirLight[0].diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	m_CBRarely.dirLight[0].specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_CBRarely.dirLight[0].direction = XMFLOAT3(0.0f, -1.0f, 0.0f);
 	// 灯光
-	m_CBRarely.pointLight[0].position = XMFLOAT3(0.0f, 10.0f, 0.0f);
-	m_CBRarely.pointLight[0].ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_CBRarely.pointLight[0].diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	m_CBRarely.pointLight[0].position = XMFLOAT3(0.0f, 5.0f, 0.0f);
+	m_CBRarely.pointLight[0].ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_CBRarely.pointLight[0].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_CBRarely.pointLight[0].specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_CBRarely.pointLight[0].att = XMFLOAT3(0.8f, 0.05f, 0.0f);
+	m_CBRarely.pointLight[0].att = XMFLOAT3(1.0f, 0.005f, 0.001f);
 	m_CBRarely.pointLight[0].range = 250.0f;
+	// 光源数量
 	m_CBRarely.numDirLight = 1;
 	m_CBRarely.numPointLight = 1;
 	m_CBRarely.numSpotLight = 0;
 	// 初始化材质
 	m_CBRarely.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_CBRarely.material.diffuse = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
-	m_CBRarely.material.specular = XMFLOAT4(0.1f, 0.1f, 0.1f, 50.0f);
+	m_CBRarely.material.specular = XMFLOAT4(0.01f, 0.01f, 0.01f, 0.5f);
 
 
 	// 更新不容易被修改的常量缓冲区资源

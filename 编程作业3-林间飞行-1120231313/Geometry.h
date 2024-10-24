@@ -80,7 +80,7 @@ namespace Geometry
 	// 几何体方法的实现
 	//
 
-	inline MeshData<VertexPosColor, WORD> CreateModel(const std::string& filePath)
+	inline MeshData<VertexPosNormalColor, WORD> CreateModel(const std::string& filePath)
 	{
 		using namespace DirectX;
 
@@ -107,7 +107,7 @@ namespace Geometry
 		}
 		file.close();
 
-		MeshData<VertexPosColor, WORD> meshData;
+		MeshData<VertexPosNormalColor, WORD> meshData;
 		size_t vertexCount = s_vertices.size();
 		size_t indexCount = 3 * s_indices.size();
 		meshData.vertexVec.resize(vertexCount);
@@ -142,7 +142,7 @@ namespace Geometry
 
 		Internal::VertexData vertexData;
 
-		VertexPosColor* vertices = new VertexPosColor[vertexCount];
+		VertexPosNormalColor* vertices = new VertexPosNormalColor[vertexCount];
 		WORD* indices = new WORD[indexCount];
 		size_t vIndex = 0, iIndex = 0;
 
@@ -152,7 +152,7 @@ namespace Geometry
 				XMFLOAT3(tempVertices[i].x - centerX, tempVertices[i].y - centerY, tempVertices[i].z - centerZ),
 				XMFLOAT3(0.0f, -1.0f, 0.0f),
 				XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f),
-				XMFLOAT4(dis(gen), dis(gen), dis(gen), dis(gen)), // 随机颜色
+				XMFLOAT4(dis(gen), dis(gen), dis(gen), 0.0f), // 随机颜色
 				XMFLOAT2(0.0f, 1.0f)
 			};
 			Internal::InsertVertexElement(meshData.vertexVec[vIndex++], vertexData);
@@ -175,7 +175,6 @@ namespace Geometry
 		delete[] indices;		// 释放临时索引数据
 		return meshData;
 	}
-
 }
 
 
