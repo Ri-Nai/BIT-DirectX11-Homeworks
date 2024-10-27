@@ -204,6 +204,7 @@ bool GameApp::InitResource()
 	// ******************
 	// 初始化游戏对象
 	ComPtr<ID3D11ShaderResourceView> texture;
+	Material material;
 
 	// 初始化模型
 	const std::vector<std::string> model_paths = {
@@ -213,7 +214,11 @@ bool GameApp::InitResource()
 	for (const auto& path : model_paths)
 	{
 		GameObject model;
+		material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		material.diffuse = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+		material.specular = XMFLOAT4(0.01f, 0.01f, 0.01f, 0.5f);
 		model.SetBuffer(m_pd3dDevice.Get(), Geometry::CreateModel(path));
+		model.SetMaterial(material);
 		m_Models.push_back(model);
 	}
 
@@ -277,11 +282,6 @@ bool GameApp::InitResource()
 	m_CBRarely.numDirLight = 1;
 	m_CBRarely.numPointLight = 1;
 	m_CBRarely.numSpotLight = 0;
-	// 初始化材质
-	m_CBRarely.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_CBRarely.material.diffuse = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
-	m_CBRarely.material.specular = XMFLOAT4(0.01f, 0.01f, 0.01f, 0.5f);
-
 
 	// 更新不容易被修改的常量缓冲区资源
 	D3D11_MAPPED_SUBRESOURCE mappedData;
@@ -305,6 +305,7 @@ bool GameApp::InitResource()
 	m_pd3dImmediateContext->VSSetConstantBuffers(1, 1, m_pConstantBuffers[1].GetAddressOf());
 	m_pd3dImmediateContext->VSSetConstantBuffers(2, 1, m_pConstantBuffers[2].GetAddressOf());
 
+	m_pd3dImmediateContext->PSSetConstantBuffers(0, 1, m_pConstantBuffers[0].GetAddressOf());
 	m_pd3dImmediateContext->PSSetConstantBuffers(1, 1, m_pConstantBuffers[1].GetAddressOf());
 	m_pd3dImmediateContext->PSSetConstantBuffers(3, 1, m_pConstantBuffers[3].GetAddressOf());
 	m_pd3dImmediateContext->PSSetShader(m_pPixelShader3D.Get(), nullptr, 0);
@@ -326,7 +327,7 @@ bool GameApp::InitResource()
 }
 
 GameApp::GameObject::GameObject()
-	: m_IndexCount(), m_VertexStride()
+	: m_IndexCount(), m_VertexStride(), m_Material()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 }
@@ -379,6 +380,11 @@ void GameApp::GameObject::SetTexture(ID3D11ShaderResourceView * texture)
 	m_pTexture = texture;
 }
 
+void GameApp::GameObject::SetMaterial(const Material& material)
+{
+	m_Material = material;
+}
+
 void GameApp::GameObject::SetWorldMatrix(const XMFLOAT4X4 & world)
 {
 	m_WorldMatrix = world;
@@ -406,6 +412,7 @@ void GameApp::GameObject::Draw(ID3D11DeviceContext * deviceContext)
 	XMMATRIX W = XMLoadFloat4x4(&m_WorldMatrix);
 	cbDrawing.world = XMMatrixTranspose(W);
 	cbDrawing.worldInvTranspose = XMMatrixInverse(nullptr, W);	// 两次转置抵消
+	cbDrawing.material = m_Material;
 
 	// 更新常量缓冲区
 	D3D11_MAPPED_SUBRESOURCE mappedData;

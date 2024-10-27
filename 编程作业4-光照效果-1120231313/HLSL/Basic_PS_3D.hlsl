@@ -5,6 +5,9 @@ float4 PS_3D(VertexPosHWNormalColor pIn) : SV_Target
 {
     // 标准化法向量
     pIn.NormalW = normalize(pIn.NormalW);
+    
+    // 初始化材质
+    Material mat = g_Material;
 
     // 顶点指向眼睛的向量
     float3 toEyeW = normalize(g_EyePosW - pIn.PosW);
@@ -21,7 +24,7 @@ float4 PS_3D(VertexPosHWNormalColor pIn) : SV_Target
 	[unroll]
     for (i = 0; i < g_NumDirLight; ++i)
     {
-        ComputeDirectionalLight(g_Material, g_DirLight[i], pIn.NormalW, toEyeW, A, D, S);
+        ComputeDirectionalLight(mat, g_DirLight[i], pIn.NormalW, toEyeW, A, D, S);
         ambient += A;
         diffuse += D;
         spec += S;
@@ -30,7 +33,7 @@ float4 PS_3D(VertexPosHWNormalColor pIn) : SV_Target
 	[unroll]
     for (i = 0; i < g_NumPointLight; ++i)
     {
-        ComputePointLight(g_Material, g_PointLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
+        ComputePointLight(mat, g_PointLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
         ambient += A;
         diffuse += D;
         spec += S;
@@ -39,7 +42,7 @@ float4 PS_3D(VertexPosHWNormalColor pIn) : SV_Target
 	[unroll]
     for (i = 0; i < g_NumSpotLight; ++i)
     {
-        ComputeSpotLight(g_Material, g_SpotLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
+        ComputeSpotLight(mat, g_SpotLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
         ambient += A;
         diffuse += D;
         spec += S;
@@ -50,7 +53,7 @@ float4 PS_3D(VertexPosHWNormalColor pIn) : SV_Target
     // float4 litColor = texColor * (ambient + diffuse) + spec;
     // litColor.a = texColor.a * g_Material.Diffuse.a;
     float4 litColor = pIn.Color * (ambient + diffuse) + spec;
-    litColor.a = pIn.Color.a * g_Material.Diffuse.a;
+    litColor.a = pIn.Color.a * mat.Diffuse.a;
 	
     return litColor;
 }

@@ -14,6 +14,7 @@ public:
 	{
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX worldInvTranspose;
+		Material material;
 	};
 
 	struct CBChangesEveryFrame
@@ -32,7 +33,6 @@ public:
 		DirectionalLight dirLight[10];
 		PointLight pointLight[10];
 		SpotLight spotLight[10];
-		Material material;
 		int numDirLight;
 		int numPointLight;
 		int numSpotLight;
@@ -50,11 +50,13 @@ public:
 		// 设置缓冲区
 		template<class VertexType, class IndexType>
 		void SetBuffer(ID3D11Device * device, const Geometry::MeshData<VertexType, IndexType>& meshData);
+		// 设置材质
+		void SetMaterial(const Material& material);
 		// 设置纹理
 		void SetTexture(ID3D11ShaderResourceView * texture);
 		// 设置矩阵
 		void SetWorldMatrix(const DirectX::XMFLOAT4X4& world);
-		void XM_CALLCONV SetWorldMatrix(DirectX::FXMMATRIX world);
+		void XM_CALLCONV SetWorldMatrix(DirectX::XMMATRIX world);
 		// 绘制
 		void Draw(ID3D11DeviceContext * deviceContext);
 
@@ -63,6 +65,7 @@ public:
 		void SetDebugObjectName(const std::string& name);
 	private:
 		DirectX::XMFLOAT4X4 m_WorldMatrix;				    // 世界矩阵
+		Material m_Material;								// 物体材质
 		ComPtr<ID3D11ShaderResourceView> m_pTexture;		// 纹理
 		ComPtr<ID3D11Buffer> m_pVertexBuffer;				// 顶点缓冲区
 		ComPtr<ID3D11Buffer> m_pIndexBuffer;				// 索引缓冲区
