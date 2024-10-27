@@ -85,7 +85,8 @@ namespace Geometry
 		using namespace DirectX;
 
 		std::ifstream file(filePath);
-		if (!file.is_open()) {
+		if (!file.is_open())
+		{
 			throw std::runtime_error("Failed to open OBJ file.");
 		}
 
@@ -97,8 +98,10 @@ namespace Geometry
 		std::vector<std::string> s_vertices, s_indices, s_normals;
 
 		// 存储每行的内容
-		while (std::getline(file, line)) {
-			if (!line.empty()) {
+		while (std::getline(file, line))
+		{
+			if (!line.empty())
+			{
 				if (line.size() > 1 && line[0] == 'v')
 					if (line[1] != 'n')
 						s_vertices.push_back(line.substr(2));
@@ -125,7 +128,8 @@ namespace Geometry
 		std::vector<XMFLOAT3> tempNormals(normalCount);		// 临时存储法线
 
 		// 读取顶点并计算质心
-		for (size_t i = 0; i < s_vertices.size(); ++i) {
+		for (size_t i = 0; i < s_vertices.size(); ++i)
+		{
 			std::istringstream data(s_vertices[i]);
 			float x, y, z;
 			data >> x >> y >> z;
@@ -162,8 +166,10 @@ namespace Geometry
 		size_t vIndex = 0, iIndex = 0;
 
 		// 重新赋值顶点并移动到中心
-		for (size_t i = 0; i < vertexCount; ++i) {
-			vertexData = {
+		for (size_t i = 0; i < vertexCount; ++i)
+		{
+			vertexData =
+			{
 				XMFLOAT3(tempVertices[i].x - centerX, tempVertices[i].y - centerY, tempVertices[i].z - centerZ),
 				tempNormals[i],
 				XMFLOAT4(-1.0f, 0.0f, 0.0f, 1.0f),
@@ -172,7 +178,8 @@ namespace Geometry
 			};
 			Internal::InsertVertexElement(meshData.vertexVec[vIndex++], vertexData);
 		}
-		for (size_t i = 0; i < s_indices.size(); ++i) {
+		for (size_t i = 0; i < s_indices.size(); ++i)
+		{
 			std::istringstream data(s_indices[i]);
 			std::string s_a, s_b, s_c;
 			data >> s_a >> s_b >> s_c;
