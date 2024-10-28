@@ -5,6 +5,7 @@
 #include "Geometry.h"
 #include "LightHelper.h"
 #include "Camera.h"
+#include <random>
 
 class GameApp : public D3DApp
 {
@@ -99,6 +100,7 @@ private:
 
 	std::vector<GameObject> m_Models;							// 所有模型
 	std::vector<std::vector<DirectX::XMMATRIX>> m_Worlds;		// 所有模型的世界矩阵
+	std::vector<std::vector<Material>> m_Materials;				// 所有模型的材质
 
 	ComPtr<ID3D11VertexShader> m_pVertexShader3D;				// 用于3D的顶点着色器
 	ComPtr<ID3D11PixelShader> m_pPixelShader3D;				    // 用于3D的像素着色器

@@ -154,9 +154,11 @@ void GameApp::DrawScene()
 	//
 	for (int i = 0; i < m_Models.size(); ++i)
 	{
-		for (const XMMATRIX& world : m_Worlds[i])
+		for (int j = 0; j < m_Worlds[i].size(); j++)
 		{
+			auto world = m_Worlds[i][j];
 			m_Models[i].SetWorldMatrix(world);
+			m_Models[i].SetMaterial(m_Materials[i][j]);
 			m_Models[i].Draw(m_pd3dImmediateContext.Get());
 		}
 	}
@@ -204,7 +206,6 @@ bool GameApp::InitResource()
 	// ******************
 	// 初始化游戏对象
 	ComPtr<ID3D11ShaderResourceView> texture;
-	Material material;
 
 	// 初始化模型
 	const std::vector<std::string> model_paths = {
@@ -214,17 +215,14 @@ bool GameApp::InitResource()
 	for (const auto& path : model_paths)
 	{
 		GameObject model;
-		material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		material.diffuse = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
-		material.specular = XMFLOAT4(0.01f, 0.01f, 0.01f, 0.5f);
 		model.SetBuffer(m_pd3dDevice.Get(), Geometry::CreateModel(path));
-		model.SetMaterial(material);
 		m_Models.push_back(model);
 	}
 
 	// 初始化模型的世界矩阵
 	m_Worlds.resize(m_Models.size());
-	for (auto& world : m_Worlds)
+	auto init_world = [&](std::vector<XMMATRIX>& world, int size)
+	{
 		for (int i = -size; i <= size; i++)
 			for (int j = -size; j <= size; j++)
 			{
@@ -234,6 +232,31 @@ bool GameApp::InitResource()
 				auto W = mScaleMatrix * mRotationMatrix * mTranslationXYMatrix;
 				world.push_back(W);
 			}
+	};
+	init_world(m_Worlds[0], size);
+	init_world(m_Worlds[1], size * 6);
+
+	// 初始化模型材质
+	m_Materials.resize(m_Models.size());
+	auto init_mat = [&](std::vector<Material>& mats, int size)
+	{
+		for (int i = 0; i < (2 * size + 1) * (2 * size + 1); i++)
+		{
+			Material material;
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+			auto color = XMFLOAT3(dis(gen), dis(gen), dis(gen));
+
+			material.ambient = XMFLOAT4(color.x, color.y, color.z, dis(gen));
+			material.diffuse = XMFLOAT4(color.x * 0.8, color.y * 0.8, color.z * 0.8, dis(gen));
+			material.specular = XMFLOAT4(color.x * 0.1, color.y * 0.1, color.z * 0.1, dis(gen));
+
+			mats.push_back(material);
+		}
+	};
+	init_mat(m_Materials[0], size);
+	init_mat(m_Materials[1], size * 6);
 		
 	// 初始化采样器状态
 	D3D11_SAMPLER_DESC sampDesc;
