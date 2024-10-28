@@ -91,6 +91,82 @@ void GameApp::UpdateScene(float dt)
 	m_pMouse->ResetScrollWheelValue();
 
 
+	// 切换灯光
+	auto set_color = [&](XMFLOAT4 color, float factor)
+	{
+		return XMFLOAT4(color.x * factor, color.y * factor, color.z * factor, 1.0f);
+	};
+	if (m_KeyboardTracker.IsKeyReleased(Keyboard::D1))
+	{
+		auto color = XMFLOAT4(0.95703125, 0.87109375, 0.52734375, 1.0f);
+		m_CBFrame.pointLight[0].position = XMFLOAT3(0.0f, 2.0f, 0.0f);
+		m_CBFrame.pointLight[0].ambient = set_color(color, 0.2);
+		m_CBFrame.pointLight[0].diffuse = set_color(color, 2.0);
+		m_CBFrame.pointLight[0].specular = set_color(color, 1.5);
+		m_CBFrame.pointLight[0].att = XMFLOAT3(1.0f, 0.1f, 0.01f);
+		m_CBFrame.pointLight[0].range = 8.0f;
+
+		m_PointLightDirection[0] = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+		m_CBFrame.numPointLight = !m_CBFrame.numPointLight;
+	}
+	if (m_KeyboardTracker.IsKeyReleased(Keyboard::D2))
+	{
+		auto color = XMFLOAT4(0.50390625, 0.97265625, 0.984375, 1.0f);
+		m_CBFrame.spotLight[0].ambient = set_color(color, 0.2);
+		m_CBFrame.spotLight[0].diffuse = set_color(color, 2.0);
+		m_CBFrame.spotLight[0].specular = set_color(color, 1.5);
+		m_CBFrame.spotLight[0].att = XMFLOAT3(1.0f, 0.05f, 0.005f);
+		m_CBFrame.spotLight[0].range = 40.0f;
+		m_CBFrame.spotLight[0].spot = 20.0f;
+
+		m_CBFrame.numSpotLight = !m_CBFrame.numSpotLight;
+	}
+	if (m_KeyboardTracker.IsKeyReleased(Keyboard::OemPlus))
+	{
+		auto idx = m_CBFrame.numDirLight;
+		auto color = XMFLOAT4(0.85546875, 0.7421875, 0.984375, 1.0f);
+
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+		auto direction = XMFLOAT3(dis(gen), dis(gen), dis(gen));
+		auto d_normalized = XMVector3Normalize(XMLoadFloat3(&direction));
+		XMStoreFloat3(&direction, d_normalized);
+
+		m_CBFrame.dirLight[idx].ambient = set_color(color, 0.2);
+		m_CBFrame.dirLight[idx].diffuse = set_color(color, 1.0);
+		m_CBFrame.dirLight[idx].specular = set_color(color, 1.0);
+		m_CBFrame.dirLight[idx].direction = direction;
+		m_CBFrame.numDirLight++;
+	}
+	if (m_KeyboardTracker.IsKeyReleased(Keyboard::OemMinus))
+	{
+		m_CBFrame.numDirLight > 0 ? m_CBFrame.numDirLight-- : 0;
+	}
+
+	// 更新光源
+	if (m_CBFrame.numPointLight)
+	{
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_real_distribution<float> dis(-0.5f, 0.5f);
+		auto delta = XMVectorSet(dis(gen), 0.0f, dis(gen), 0.0f);
+		auto dir = XMLoadFloat3(&m_PointLightDirection[0]);
+		dir = XMVector3Normalize(dir + delta);
+		XMStoreFloat3(&m_PointLightDirection[0], dir);
+
+		auto pos = XMLoadFloat3(&m_CBFrame.pointLight[0].position);
+		pos += dir * dt * 2.0f;
+		XMStoreFloat3(&m_CBFrame.pointLight[0].position, pos);
+	}
+	if (m_CBFrame.numSpotLight)
+	{
+		m_CBFrame.spotLight[0].position = m_pCamera->GetPosition();
+		m_CBFrame.spotLight[0].direction = m_pCamera->GetLook();
+	}
+
+
 	m_Worlds.clear();
 	// m_Worlds[0] 和 [1] 存储 母字符 与 子字符 的世界矩阵 
 	m_Worlds.resize(2);
@@ -289,22 +365,24 @@ bool GameApp::InitResource()
 	m_CBOnResize.proj = XMMatrixTranspose(m_pCamera->GetProjXM());
 
 	// 初始化不会变化的值
-	// 环境光
-	m_CBRarely.dirLight[0].ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_CBRarely.dirLight[0].diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	m_CBRarely.dirLight[0].specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_CBRarely.dirLight[0].direction = XMFLOAT3(0.0f, -1.0f, 0.0f);
 	// 灯光
-	m_CBRarely.pointLight[0].position = XMFLOAT3(0.0f, 5.0f, 0.0f);
-	m_CBRarely.pointLight[0].ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_CBRarely.pointLight[0].diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_CBRarely.pointLight[0].specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_CBRarely.pointLight[0].att = XMFLOAT3(1.0f, 0.005f, 0.001f);
-	m_CBRarely.pointLight[0].range = 250.0f;
+	auto color = XMFLOAT4(0.95703125, 0.87109375, 0.52734375, 1.0f);
+	auto set_color = [&](float factor)
+	{
+		return XMFLOAT4(color.x * factor, color.y * factor, color.z * factor, 1.0f);
+	};
+	m_CBFrame.pointLight[0].position = XMFLOAT3(0.0f, 2.0f, 0.0f);
+	m_CBFrame.pointLight[0].ambient = set_color(0.2);
+	m_CBFrame.pointLight[0].diffuse = set_color(2.0);
+	m_CBFrame.pointLight[0].specular = set_color(1.5);
+	m_CBFrame.pointLight[0].att = XMFLOAT3(1.0f, 0.1f, 0.01f);
+	m_CBFrame.pointLight[0].range = 8.0f;
+
+	m_PointLightDirection[0] = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	// 光源数量
-	m_CBRarely.numDirLight = 1;
-	m_CBRarely.numPointLight = 1;
-	m_CBRarely.numSpotLight = 0;
+	m_CBFrame.numDirLight = 0;
+	m_CBFrame.numPointLight = 1;
+	m_CBFrame.numSpotLight = 0;
 
 	// 更新不容易被修改的常量缓冲区资源
 	D3D11_MAPPED_SUBRESOURCE mappedData;

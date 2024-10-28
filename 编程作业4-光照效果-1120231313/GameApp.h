@@ -22,6 +22,12 @@ public:
 	{
 		DirectX::XMMATRIX view;
 		DirectX::XMFLOAT4 eyePos;
+		DirectionalLight dirLight[10];
+		PointLight pointLight[10];
+		SpotLight spotLight[10];
+		int numDirLight;
+		int numPointLight;
+		int numSpotLight;
 	};
 
 	struct CBChangesOnResize
@@ -31,13 +37,7 @@ public:
 
 	struct CBChangesRarely
 	{
-		DirectionalLight dirLight[10];
-		PointLight pointLight[10];
-		SpotLight spotLight[10];
-		int numDirLight;
-		int numPointLight;
-		int numSpotLight;
-		float pad;		// 打包保证16字节对齐
+		float pad[4];		// 打包保证16字节对齐
 	};
 
 	// 一个尽可能小的游戏对象类
@@ -114,6 +114,7 @@ private:
 	std::shared_ptr<Camera> m_pCamera;						    // 摄像机
 	CameraMode m_CameraMode;									// 摄像机模式
 
+	DirectX::XMFLOAT3 m_PointLightDirection[10];				// 点光源运动方向
 };
 
 
