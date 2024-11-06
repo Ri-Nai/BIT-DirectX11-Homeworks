@@ -92,7 +92,7 @@ private:
 
 private:
 	// 定义了方阵的大小
-	static constexpr int size = 16;
+	static constexpr int size = 12;
 	// 定义了游戏至此的角度
 	float angle = 0;
 	ComPtr<ID3D11InputLayout> m_pVertexLayout3D;				// 用于3D的顶点输入布局
@@ -104,6 +104,7 @@ private:
 
 	ComPtr<ID3D11VertexShader> m_pVertexShader3D;				// 用于3D的顶点着色器
 	ComPtr<ID3D11PixelShader> m_pPixelShader3D;				    // 用于3D的像素着色器
+	ComPtr<ID3D11GeometryShader> m_pGeometryShader3D;			// 用于3D的几何着色器
 
 	CBChangesEveryFrame m_CBFrame;							    // 该缓冲区存放仅在每一帧进行更新的变量
 	CBChangesOnResize m_CBOnResize;							    // 该缓冲区存放仅在窗口大小变化时更新的变量

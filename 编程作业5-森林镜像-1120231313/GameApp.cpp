@@ -258,6 +258,9 @@ bool GameApp::InitEffect()
 	HR(CreateShaderFromFile(L"HLSL\\Basic_PS_3D.cso", L"HLSL\\Basic_PS_3D.hlsl", "PS_3D", "ps_5_0", blob.ReleaseAndGetAddressOf()));
 	HR(m_pd3dDevice->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, m_pPixelShader3D.GetAddressOf()));
 
+	HR(CreateShaderFromFile(L"HLSL\\Basic_GS_3D.cso", L"HLSL\\Basic_GS_3D.hlsl", "GS_3D", "gs_5_0", blob.ReleaseAndGetAddressOf()));
+	HR(m_pd3dDevice->CreateGeometryShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, m_pGeometryShader3D.GetAddressOf()));
+
 	return true;
 }
 
@@ -322,7 +325,8 @@ bool GameApp::InitResource()
 			std::random_device rd;
 			std::mt19937 gen(rd());
 			std::uniform_real_distribution<float> dis(0.0f, 1.0f);
-			auto color = XMFLOAT3(dis(gen), dis(gen), dis(gen));
+			auto factor = dis(gen);
+			auto color = XMFLOAT3(factor, factor, factor);
 
 			material.ambient = XMFLOAT4(color.x, color.y, color.z, dis(gen));
 			material.diffuse = XMFLOAT4(color.x * 0.8, color.y * 0.8, color.z * 0.8, dis(gen));
@@ -405,6 +409,10 @@ bool GameApp::InitResource()
 	m_pd3dImmediateContext->VSSetConstantBuffers(0, 1, m_pConstantBuffers[0].GetAddressOf());
 	m_pd3dImmediateContext->VSSetConstantBuffers(1, 1, m_pConstantBuffers[1].GetAddressOf());
 	m_pd3dImmediateContext->VSSetConstantBuffers(2, 1, m_pConstantBuffers[2].GetAddressOf());
+
+	m_pd3dImmediateContext->GSSetShader(m_pGeometryShader3D.Get(), nullptr, 0);
+	m_pd3dImmediateContext->GSSetConstantBuffers(1, 1, m_pConstantBuffers[1].GetAddressOf());
+	m_pd3dImmediateContext->GSSetConstantBuffers(2, 1, m_pConstantBuffers[2].GetAddressOf());
 
 	m_pd3dImmediateContext->PSSetConstantBuffers(0, 1, m_pConstantBuffers[0].GetAddressOf());
 	m_pd3dImmediateContext->PSSetConstantBuffers(1, 1, m_pConstantBuffers[1].GetAddressOf());
