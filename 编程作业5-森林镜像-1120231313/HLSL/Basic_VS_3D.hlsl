@@ -10,6 +10,6 @@ VertexPosHWNormalColor VS_3D(VertexPosNormalColor vIn)
     vOut.PosH = mul(posW, viewProj);
     vOut.PosW = posW.xyz;
     vOut.NormalW = mul(vIn.NormalL, (float3x3) g_WorldInvTranspose);
-    vOut.Color = vIn.Color;
+    vOut.Color = m_Color;
     return vOut;
 }

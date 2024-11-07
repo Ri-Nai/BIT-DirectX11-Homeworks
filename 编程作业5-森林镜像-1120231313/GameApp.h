@@ -16,6 +16,7 @@ public:
 		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX worldInvTranspose;
 		Material material;
+		DirectX::XMFLOAT4 color;
 	};
 
 	struct CBChangesEveryFrame
@@ -53,6 +54,8 @@ public:
 		void SetBuffer(ID3D11Device * device, const Geometry::MeshData<VertexType, IndexType>& meshData);
 		// 设置材质
 		void SetMaterial(const Material& material);
+		// 设置颜色
+		void SetColor(const DirectX::XMFLOAT4& color);
 		// 设置纹理
 		void SetTexture(ID3D11ShaderResourceView * texture);
 		// 设置矩阵
@@ -67,6 +70,7 @@ public:
 	private:
 		DirectX::XMFLOAT4X4 m_WorldMatrix;				    // 世界矩阵
 		Material m_Material;								// 物体材质
+		DirectX::XMFLOAT4 m_Color;							// 颜色
 		ComPtr<ID3D11ShaderResourceView> m_pTexture;		// 纹理
 		ComPtr<ID3D11Buffer> m_pVertexBuffer;				// 顶点缓冲区
 		ComPtr<ID3D11Buffer> m_pIndexBuffer;				// 索引缓冲区
@@ -101,6 +105,7 @@ private:
 	std::vector<GameObject> m_Models;							// 所有模型
 	std::vector<std::vector<DirectX::XMMATRIX>> m_Worlds;		// 所有模型的世界矩阵
 	std::vector<std::vector<Material>> m_Materials;				// 所有模型的材质
+	std::vector<std::vector<DirectX::XMFLOAT4>> m_Colors;		// 所有模型的颜色
 
 	ComPtr<ID3D11VertexShader> m_pVertexShader3D;				// 用于3D的顶点着色器
 	ComPtr<ID3D11PixelShader> m_pPixelShader3D;				    // 用于3D的像素着色器

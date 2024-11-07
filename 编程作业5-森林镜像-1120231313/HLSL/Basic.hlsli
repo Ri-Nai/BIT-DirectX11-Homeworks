@@ -9,6 +9,7 @@ cbuffer CBChangesEveryDrawing : register(b0)
 	matrix g_World;
 	matrix g_WorldInvTranspose;
     Material g_Material;
+    float4 m_Color;
 }
 
 cbuffer CBChangesEveryFrame : register(b1)

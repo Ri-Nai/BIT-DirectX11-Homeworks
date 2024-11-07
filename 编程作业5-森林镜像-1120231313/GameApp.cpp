@@ -235,6 +235,7 @@ void GameApp::DrawScene()
 			auto world = m_Worlds[i][j];
 			m_Models[i].SetWorldMatrix(world);
 			m_Models[i].SetMaterial(m_Materials[i][j]);
+			m_Models[i].SetColor(m_Colors[i][j]);
 			m_Models[i].Draw(m_pd3dImmediateContext.Get());
 		}
 	}
@@ -337,6 +338,22 @@ bool GameApp::InitResource()
 	};
 	init_mat(m_Materials[0], size);
 	init_mat(m_Materials[1], size * 6);
+
+	// 初始化模型颜色
+	m_Colors.resize(m_Models.size());
+	auto init_color = [&](std::vector<XMFLOAT4>& colors, int size)
+		{
+			for (int i = 0; i < (2 * size + 1) * (2 * size + 1); i++)
+			{
+				std::random_device rd;
+				std::mt19937 gen(rd());
+				std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+
+				colors.push_back(XMFLOAT4(dis(gen), dis(gen), dis(gen), 1.0f));
+			}
+		};
+	init_color(m_Colors[0], size);
+	init_color(m_Colors[1], size * 6);
 		
 	// 初始化采样器状态
 	D3D11_SAMPLER_DESC sampDesc;
@@ -358,7 +375,7 @@ bool GameApp::InitResource()
 	auto camera = std::shared_ptr<FirstPersonCamera>(new FirstPersonCamera);
 	m_pCamera = camera;
 	camera->SetViewPort(0.0f, 0.0f, (float)m_ClientWidth, (float)m_ClientHeight);
-	XMFLOAT3 pos = XMFLOAT3(1.0f, 1.0f, 0.5f);
+	XMFLOAT3 pos = XMFLOAT3(30.0f, 1.0f, 0.5f);
 	XMFLOAT3 to = XMFLOAT3(0.0f, 0.0f, 1.0f);
 	XMFLOAT3 up = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	pos.y += 3;
@@ -375,7 +392,7 @@ bool GameApp::InitResource()
 	{
 		return XMFLOAT4(color.x * factor, color.y * factor, color.z * factor, 1.0f);
 	};
-	m_CBFrame.pointLight[0].position = XMFLOAT3(0.0f, 2.0f, 0.0f);
+	m_CBFrame.pointLight[0].position = XMFLOAT3(30.0f, 2.0f, 0.0f);
 	m_CBFrame.pointLight[0].ambient = set_color(0.2);
 	m_CBFrame.pointLight[0].diffuse = set_color(2.0);
 	m_CBFrame.pointLight[0].specular = set_color(1.5);
@@ -499,6 +516,11 @@ void GameApp::GameObject::SetWorldMatrix(const XMFLOAT4X4 & world)
 	m_WorldMatrix = world;
 }
 
+void GameApp::GameObject::SetColor(const XMFLOAT4& color)
+{
+	m_Color = color;
+}
+
 void XM_CALLCONV GameApp::GameObject::SetWorldMatrix(XMMATRIX world)
 {
 	XMStoreFloat4x4(&m_WorldMatrix, world);
@@ -522,6 +544,7 @@ void GameApp::GameObject::Draw(ID3D11DeviceContext * deviceContext)
 	cbDrawing.world = XMMatrixTranspose(W);
 	cbDrawing.worldInvTranspose = XMMatrixInverse(nullptr, W);	// 两次转置抵消
 	cbDrawing.material = m_Material;
+	cbDrawing.color = m_Color;
 
 	// 更新常量缓冲区
 	D3D11_MAPPED_SUBRESOURCE mappedData;
