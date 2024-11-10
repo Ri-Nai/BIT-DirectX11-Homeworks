@@ -226,6 +226,7 @@ void GameApp::DrawScene()
 	m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	m_pd3dImmediateContext->IASetInputLayout(m_pVertexLayoutPosNormalTex.Get());
+	m_pd3dImmediateContext->RSSetState(m_pRasterizerState.Get());
 
 	m_pd3dImmediateContext->VSSetShader(m_pPlaneVS3D.Get(), nullptr, 0);
 	m_pd3dImmediateContext->GSSetShader(nullptr, nullptr, 0);
@@ -234,6 +235,7 @@ void GameApp::DrawScene()
 	m_Plane.Draw(m_pd3dImmediateContext.Get());
 
 	m_pd3dImmediateContext->IASetInputLayout(m_pVertexLayoutPosNormalColor.Get());
+	m_pd3dImmediateContext->RSSetState(nullptr);
 
 	m_pd3dImmediateContext->VSSetShader(m_pVertexShader3D.Get(), nullptr, 0);
 	m_pd3dImmediateContext->GSSetShader(m_pGeometryShader3D.Get(), nullptr, 0);
@@ -395,6 +397,19 @@ bool GameApp::InitResource()
 		};
 	init_color(m_Colors[0], size);
 	init_color(m_Colors[1], size * 6);
+
+	// ******************
+	// 初始化光栅化器状态
+	//
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
+
+	// 无背面剔除模式
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	rasterizerDesc.FrontCounterClockwise = false;
+	rasterizerDesc.DepthClipEnable = true;
+	HR(m_pd3dDevice->CreateRasterizerState(&rasterizerDesc, m_pRasterizerState.GetAddressOf()));
 		
 	// 初始化采样器状态
 	D3D11_SAMPLER_DESC sampDesc;

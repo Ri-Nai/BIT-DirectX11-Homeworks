@@ -112,6 +112,8 @@ private:
 	std::vector<std::vector<DirectX::XMFLOAT4>> m_Colors;		// 所有模型的颜色
 	GameObject m_Plane;											// 平面
 
+	ComPtr<ID3D11RasterizerState> m_pRasterizerState;			// 光栅化状态
+
 	ComPtr<ID3D11VertexShader> m_pVertexShader3D;				// 用于3D的顶点着色器
 	ComPtr<ID3D11VertexShader> m_pPlaneVS3D;					// 用于平面的顶点着色器
 	ComPtr<ID3D11PixelShader> m_pPixelShader3D;				    // 用于3D的像素着色器
