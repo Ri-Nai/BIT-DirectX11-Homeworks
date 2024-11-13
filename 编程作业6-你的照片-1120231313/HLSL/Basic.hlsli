@@ -10,6 +10,8 @@ cbuffer CBChangesEveryDrawing : register(b0)
 	matrix g_WorldInvTranspose;
     Material g_Material;
     float4 m_Color;
+    float2 m_TexOffset;
+    float m_TexScale;
 }
 
 cbuffer CBChangesEveryFrame : register(b1)

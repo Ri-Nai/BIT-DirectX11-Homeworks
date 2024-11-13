@@ -47,8 +47,11 @@ float4 PS_3D(VertexPosHWNormalTex pIn) : SV_Target
         diffuse += D;
         spec += S;
     }
-  
-    float4 texColor = g_Tex.Sample(g_SamLinear, pIn.Tex);
+    
+    float2 tex = pIn.Tex;
+    tex += m_TexOffset;
+    
+    float4 texColor = g_Tex.Sample(g_SamLinear, tex);
     float4 litColor = texColor * (ambient + diffuse) + spec;
     litColor.a = texColor.a * g_Material.Diffuse.a;
 	

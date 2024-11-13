@@ -20,6 +20,9 @@ public:
 		DirectX::XMMATRIX worldInvTranspose;
 		Material material;
 		DirectX::XMFLOAT4 color;
+
+		DirectX::XMFLOAT2 texOffset;
+		DirectX::XMFLOAT2 texScale;
 	};
 
 	struct CBChangesEveryFrame
@@ -64,6 +67,8 @@ public:
 		// 设置矩阵
 		void SetWorldMatrix(const DirectX::XMFLOAT4X4& world);
 		void XM_CALLCONV SetWorldMatrix(DirectX::XMMATRIX world);
+		// 设置纹理坐标偏移
+		void SetTexOffset(const DirectX::XMFLOAT2& offset);
 		// 绘制
 		void Draw(ID3D11DeviceContext * deviceContext);
 
@@ -79,6 +84,8 @@ public:
 		ComPtr<ID3D11Buffer> m_pIndexBuffer;				// 索引缓冲区
 		UINT m_VertexStride;								// 顶点字节大小
 		UINT m_IndexCount;								    // 索引数目	
+		DirectX::XMFLOAT2 m_TexOffset;						// 纹理坐标偏移
+		DirectX::XMFLOAT2 m_TexScale;						// 纹理坐标缩放
 	};
 
 	// 摄像机模式

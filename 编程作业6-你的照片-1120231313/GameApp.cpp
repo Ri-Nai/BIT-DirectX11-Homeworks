@@ -172,6 +172,9 @@ void GameApp::UpdateScene(float dt)
 	m_Worlds.resize(2);
 	angle += dt;
 
+	XMFLOAT2 texOffset = XMFLOAT2(angle * 0.1f, 0.0f);
+	m_Plane.SetTexOffset(texOffset);
+
 	for (int i = -size; i <= size; i++)
 	{
 		for (int j = -size; j <= size; j++)
@@ -511,7 +514,7 @@ bool GameApp::InitResource()
 }
 
 GameApp::GameObject::GameObject()
-	: m_IndexCount(), m_VertexStride(), m_Material()
+	: m_IndexCount(), m_VertexStride(), m_Material(), m_TexOffset(0.0f, 0.0f), m_TexScale(1.0f, 1.0f)
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 }
@@ -584,6 +587,11 @@ void XM_CALLCONV GameApp::GameObject::SetWorldMatrix(XMMATRIX world)
 	XMStoreFloat4x4(&m_WorldMatrix, world);
 }
 
+void GameApp::GameObject::SetTexOffset(const XMFLOAT2& offset)
+{
+	m_TexOffset = offset;
+}
+
 void GameApp::GameObject::Draw(ID3D11DeviceContext * deviceContext)
 {
 	// 设置顶点/索引缓冲区
@@ -603,6 +611,8 @@ void GameApp::GameObject::Draw(ID3D11DeviceContext * deviceContext)
 	cbDrawing.worldInvTranspose = XMMatrixInverse(nullptr, W);	// 两次转置抵消
 	cbDrawing.material = m_Material;
 	cbDrawing.color = m_Color;
+	cbDrawing.texOffset = m_TexOffset;
+	cbDrawing.texScale = m_TexScale;
 
 	// 更新常量缓冲区
 	D3D11_MAPPED_SUBRESOURCE mappedData;
