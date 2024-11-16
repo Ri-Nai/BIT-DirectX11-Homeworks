@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "编程作业5-森林镜像-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "编程作业6-你的照片-1120231313", "编程作业6-你的照片-1120231313\编程作业6-你的照片-1120231313.vcxproj", "{DBBF7B9C-8CF2-4D49-8BEF-71EBB986B600}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "编程作业7-镜中世界-1120231313", "编程作业7-镜中世界-1120231313\编程作业7-镜中世界-1120231313.vcxproj", "{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{DBBF7B9C-8CF2-4D49-8BEF-71EBB986B600}.Release|x64.Build.0 = Release|x64
 		{DBBF7B9C-8CF2-4D49-8BEF-71EBB986B600}.Release|x86.ActiveCfg = Release|Win32
 		{DBBF7B9C-8CF2-4D49-8BEF-71EBB986B600}.Release|x86.Build.0 = Release|Win32
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Debug|x64.ActiveCfg = Debug|x64
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Debug|x64.Build.0 = Debug|x64
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Debug|x86.ActiveCfg = Debug|Win32
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Debug|x86.Build.0 = Debug|Win32
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Release|x64.ActiveCfg = Release|x64
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Release|x64.Build.0 = Release|x64
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Release|x86.ActiveCfg = Release|Win32
+		{FB5C318E-39C2-4ED9-A594-36AFA36A3E27}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
